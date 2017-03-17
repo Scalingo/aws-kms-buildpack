@@ -2,6 +2,7 @@ require 'aws-sdk'
 require 'fileutils'
 
 def download(s3, install_path, key)
+  puts "Downloading #{key} at #{install_path}"
   resp = s3.get_object({
     bucket: ENV["AWS_BUCKET"],
     key: key,
@@ -19,7 +20,9 @@ needed.each do |key|
   end
 end
 
-FileUtils.mkdir_p ENV["CERTS_INSTALL_PATH"]
+base_path = "#{ENV["BUILD_DIR"]}/#{ENV["CERTS_INSTALL_PATH"]}"
+
+FileUtils.mkdir_p base_path
 
 Aws.config.update({
   region: ENV["AWS_REGION"],
@@ -29,9 +32,9 @@ Aws.config.update({
 
 s3 = Aws::S3::Client.new({region: ENV["AWS_REGION"]})
 
-download(s3, "#{ENV["CERTS_INSTALL_PATH"]}/ca.crt", ENV["CA_KEY"])
-download(s3, "#{ENV["CERTS_INSTALL_PATH"]}/cert.crt", ENV["CERT_KEY"])
-download(s3, "#{ENV["CERTS_INSTALL_PATH"]}/private.key", ENV["PRIVATE_KEY"])
+download(s3, "#{base_path}/ca.crt", ENV["CA_KEY"])
+download(s3, "#{base_path}/cert.crt", ENV["CERT_KEY"])
+download(s3, "#{base_path}/private.key", ENV["PRIVATE_KEY"])
 
 
 
