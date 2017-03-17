@@ -13,7 +13,8 @@ needed = ["AWS_BUCKET", "AWS_REGION", "AWS_ID", "AWS_TOKEN", "CERTS_INSTALL_PATH
 
 needed.each do |key|
   if ! ENV.has_key?(key) then
-    abort("Missing key: #{key}")
+    puts "Missing key: #{key}"
+    exit 0
   end
 end
 
