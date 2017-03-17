@@ -1,4 +1,5 @@
 require 'aws-sdk'
+require 'fileutils'
 
 def download(s3, install_path, key)
   resp = s3.get_object({
@@ -17,6 +18,8 @@ needed.each do |key|
     exit 0
   end
 end
+
+FileUtils.mkdir_p ENV["CERTS_INSTALL_PATH"]
 
 Aws.config.update({
   region: ENV["AWS_REGION"],
