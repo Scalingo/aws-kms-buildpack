@@ -11,13 +11,21 @@ def download(s3, install_path, key)
   })
 end
 
-needed = ["AWS_BUCKET", "AWS_REGION", "AWS_ID", "AWS_TOKEN", "CERTS_INSTALL_PATH", "CA_KEY", "CERT_KEY", "PRIVATE_KEY"]
+needed = ["AWS_BUCKET", "AWS_REGION", "AWS_ID", "AWS_TOKEN", "CERTS_INSTALL_PATH", "OBJECTS", "FILES"]
 
 needed.each do |key|
   if ! ENV.has_key?(key) then
     puts "Missing key: #{key}"
     exit 0
   end
+end
+
+objects = ENV["OBJECTS"].split(",")
+files = ENV["FILES"].split(",")
+
+if objects.length != files.length then
+  puts "Files length is not the same as objects length"
+  exit 1
 end
 
 base_path = "#{ENV["BUILD_DIR"]}/#{ENV["CERTS_INSTALL_PATH"]}"
@@ -29,13 +37,9 @@ Aws.config.update({
   credentials: Aws::Credentials.new(ENV["AWS_ID"], ENV["AWS_TOKEN"])
 })
 
-
 s3 = Aws::S3::Client.new({region: ENV["AWS_REGION"]})
 
-download(s3, "#{base_path}/ca.crt", ENV["CA_KEY"])
-download(s3, "#{base_path}/cert.crt", ENV["CERT_KEY"])
-download(s3, "#{base_path}/private.key", ENV["PRIVATE_KEY"])
-
-
-
+for i in 0..objets.length-1 do
+  download(s3, "#{base_path}/#{files[i]}", objets[i])
+end
 
