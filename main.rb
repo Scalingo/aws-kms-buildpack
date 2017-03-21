@@ -41,7 +41,7 @@ Aws.config.update({
 
 s3 = Aws::S3::Client.new({region: ENV["AWS_REGION"]})
 
-for i in 0..objets.length-1 do
-  download(s3, "#{base_path}/#{files[i]}", objets[i])
+for i in 0..objects.length-1 do
+  download(s3, "#{base_path}/#{files[i]}", objects[i])
 end
 
