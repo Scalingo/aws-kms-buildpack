@@ -1,4 +1,4 @@
-## Scalingo aws kms buildpack
+## Scalingo aws kms buildpack
 
 This buildpack is used to download certificate from our S3 bucket.
 
