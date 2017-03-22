@@ -1,4 +1,8 @@
 #!/bin/sh
 cd $(dirname $0)/../
+export GEM_HOME=$1
+export BUILD_DIR=$1
+echo "GEM_HOME: $GEM_HOME"
+echo "BUILD_DIR: $BUILD_DIR"
 bundle install
 ruby main.rb
