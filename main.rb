@@ -30,7 +30,7 @@ if objects.length != files.length then
   exit 1
 end
 
-base_path = "#{ENV["BUILD_DIR"]}/#{ENV["CERTS_INSTALL_PATH"]}"
+base_path = "#{ENV["BUILD_DIR"]}#{ENV["CERTS_INSTALL_PATH"]}"
 
 FileUtils.mkdir_p base_path
 
