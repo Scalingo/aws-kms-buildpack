@@ -11,10 +11,10 @@ https://github.com/Scalingo/aws-kms-buildpack.git
 
 This script use the following environment variables:
 
-* `AWS_BUCKET`: The name of the bucket
-* `AWS_REGION`: The name of the region of the bucket (and the sse key)
-* `AWS_ID`: The aws user id
-* `AWS_TOKEN`: The aws user token
+* `KMSBP_AWS_BUCKET`: The name of the bucket
+* `KMSBP_AWS_REGION`: The name of the region of the bucket (and the sse key)
+* `KMSBP_AWS_ID`: The aws user id
+* `KMSBP_AWS_TOKEN`: The aws user token
 * `CERTS_INSTALL_PATH`: Path to the certificates
 * `OBJECTS`: See below
 * `FILES`: See below
