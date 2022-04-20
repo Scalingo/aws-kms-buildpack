@@ -1,0 +1,8 @@
+version = "1.0.0"
+owner = "etienne@scalingo.com"
+team = "IST"
+description = "Buildpack which lets you download secrets from AWS S3 - encrypted with KMS during the deployment"
+languages = ["shell"]
+destination_server = []
+flags = ["buildpack"]
+dependencies = []
