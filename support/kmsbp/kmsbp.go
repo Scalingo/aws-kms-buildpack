@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	needed = []string{"KMSBP_AWS_BUCKET", "KMSBP_AWS_REGION", "KMSBP_AWS_ID", "KMSBP_AWS_TOKEN", "CERTS_INSTALL_PATH", "OBJECTS", "FILES", "BUILD_DIR"}
+	needed = []string{"KMSBP_AWS_BUCKET", "KMSBP_AWS_REGION", "KMSBP_AWS_ID", "KMSBP_AWS_TOKEN", "CERTS_INSTALL_PATH", "OBJECTS", "FILES"}
 )
 
 const zipSpecSeparator = ":"
