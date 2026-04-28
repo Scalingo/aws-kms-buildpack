@@ -29,7 +29,7 @@ func main() {
 	files := strings.Split(os.Getenv("FILES"), ",")
 
 	if len(objects) != len(files) {
-		log.Println("FILES length is not the same as OBEJCTS length")
+		log.Println("FILES length is not the same as OBJECTS length")
 		os.Exit(-1)
 	}
 
