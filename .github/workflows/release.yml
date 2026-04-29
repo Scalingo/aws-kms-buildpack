@@ -1,0 +1,23 @@
+name: Release to production
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'release/v*.*.*'   # PR base branch is a release/* branch
+
+permissions:
+  contents: write          # needed to create the release
+  deployments: write       # recommended for environment/deployment updates
+
+jobs:
+  create_release:
+    name: Create GitHub Release
+    if: ${{ github.event.pull_request.merged == true }}
+    runs-on: ubuntu-24.04
+    environment:
+      name: production        # <-- triggers the approval gate in the environment
+    steps:
+      - uses: Scalingo/actions/go-stable-release@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
