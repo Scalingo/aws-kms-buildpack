@@ -22,7 +22,7 @@ _CMN_VERSION_=20260320
 # cause failures.
 # So, if _CMN_LOADED_ is set, return immediately.
 # Else, set it and load the functions.
-[[ -n "${_CMN_LOADED_}" ]] && return
+[[ -n "${_CMN_LOADED_:-}" ]] && return
 _CMN_LOADED_="yes"
 
 
