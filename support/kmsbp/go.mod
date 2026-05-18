@@ -1,6 +1,6 @@
 module github.com/Scalingo/aws-kms-buildpack/kmsbp
 
-go 1.25
+go 1.25.0
 
 require github.com/aws/aws-sdk-go-v2 v0.10.0
 

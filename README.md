@@ -20,6 +20,16 @@ This buildpack uses the following environment variables:
 
 The `OBJECTS` and `FILES` are two comma separated strings representing the objects to download from S3 and their filenames on the hardrive.
 
+By default, each `OBJECTS` entry is treated as a plain S3 object key.
+You can also extract a file from a zip object with this syntax:
+
+```
+<zip-object>:<path-inside-zip>
+```
+
+For example, `secrets/bundle.zip:tls/server.crt` means:
+download `secrets/bundle.zip` from S3, then extract `tls/server.crt` from that zip and write it to the matching `FILES` path.
+
 If we have the following configuration:
 
 ```
@@ -28,6 +38,14 @@ FILES=1.txt,2.txt,3.txt
 ```
 
 The buildpack will download the object `a` from S3 and store it in the `$CERTS_INSTALL_PATH/1.txt` file, store the `b` object to `$CERTS_INSTALL_PATH/2.txt` and store the `c` object to `$CERTS_INSTALL_PATH/3.txt`.
+
+Mixed example with both plain objects and zip entries:
+
+```
+OBJECTS=certs/root.crt,secrets/bundle.zip:tls/server.crt
+FILES=root.crt,server.crt
+```
+
 
 ### Release
 
