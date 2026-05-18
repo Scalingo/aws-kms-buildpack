@@ -1,5 +1,91 @@
-#!/bin/sh
-cd $(dirname $0)/../
+#!/usr/bin/env bash
 
-export BUILD_DIR=$1
+set -euo pipefail
+
+# shellcheck source=../vendor/cmnlib.sh
+source "$( readlink -f "$( dirname "${0}" )/../vendor/cmnlib.sh" )"
+
+cd "$( dirname "${0}" )/../"
+
+readonly REPO="${KMSBP_GITHUB_REPOSITORY:-Scalingo/aws-kms-buildpack}"
+
+version="${KMSBP_VERSION:-}"
+if [[ -z "${version}" ]]; then
+	version="$(
+            curl --fail --silent --head --location "https://github.com/${REPO}/releases/latest" \
+                | awk -F '/' '/^location:/ {print $NF}' \
+                | tr --delete '\r'
+	)"
+fi
+
+if [[ -z "${version}" ]] || [[ "${version}" != v* && "${version}" != [0-9]* ]]; then
+	cmn::main::fail 2 "Unable to resolve kmsbp version from GitHub releases"
+fi
+
+if [[ "${version}" != v* ]]; then
+	version="v${version}"
+fi
+
+os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+arch="$(uname -m)"
+case "${arch}" in
+	x86_64)
+		arch="amd64"
+		;;
+	aarch64)
+		arch="arm64"
+		;;
+esac
+
+asset="aws-kms-buildpack-${version}-${os}-${arch}.tar.gz"
+url="https://github.com/${REPO}/releases/download/${version}/${asset}"
+checksums_asset="aws-kms-buildpack-${version}-checksums.txt"
+checksums_url="https://github.com/${REPO}/releases/download/${version}/${checksums_asset}"
+
+tmp_dir="$(mktemp --directory --tmpdir="/tmp" --quiet)"
+archive_path="${tmp_dir}/${asset}"
+extract_dir="${tmp_dir}/extract"
+checksums_path="${tmp_dir}/${checksums_asset}"
+asset_checksum_path="${tmp_dir}/${asset}.sha256"
+mkdir --parents "${extract_dir}"
+
+cmn::task::start "Downloading checksums ${version}"
+cmn::file::download "${checksums_url}" "${checksums_path}" || cmn::main::fail 2 <<-EOM
+	Unable to download kmsbp checksums.
+	URL: ${checksums_url}
+	You can override version with KMSBP_VERSION and repository with KMSBP_GITHUB_REPOSITORY.
+EOM
+cmn::task::finish
+
+if ! awk -v target="${asset}" '
+	$2 == target || $2 == "*" target {
+		print $1 "  " target
+		found = 1
+	}
+	END { exit(found ? 0 : 1) }
+' "${checksums_path}" > "${asset_checksum_path}"; then
+	cmn::main::fail 2 "Unable to find checksum for ${asset} in ${checksums_asset}"
+fi
+
+cmn::task::start "Downloading and verifying kmsbp ${version}"
+cmn::file::download_and_check "${url}" "file://${asset_checksum_path}" \
+	"${archive_path}" "${tmp_dir}/downloaded.sha256" || cmn::main::fail 2 <<-EOM
+	Unable to download or verify kmsbp release asset.
+	Asset URL: ${url}
+	Checksum URL: ${checksums_url}
+EOM
+cmn::task::finish
+
+cmn::task::start "Installing kmsbp"
+tar --extract --gzip --file "${archive_path}" --directory "${extract_dir}"
+kmsbp_path="$(find "${extract_dir}" -type f -name kmsbp | head -n 1 || true)"
+if [[ -z "${kmsbp_path}" ]]; then
+	cmn::main::fail 2 "Unable to find kmsbp binary in downloaded archive"
+fi
+install --mode=0755 "${kmsbp_path}" "vendor/kmsbp"
+cmn::task::finish
+
+rm -rf -- "${tmp_dir}" || true
+
+export BUILD_DIR="${1:?BUILD_DIR is required}"
 vendor/kmsbp
