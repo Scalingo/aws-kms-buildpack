@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+# shellcheck source=../vendor/cmnlib.sh
 source "$( readlink -f "$( dirname "${0}" )/../vendor/cmnlib.sh" )"
 
 cd "$( dirname "${0}" )/../"
