@@ -53,7 +53,7 @@ FILES=root.crt,server.crt
 
 ```bash
 # x.y.z is the version number for this release
-$SCALINGO_HOME/tools-and-hacks/prod-release/sc-release-odr-38 x.y.z
+cd support/kmsbp/ && $SCALINGO_HOME/tools-and-hacks/prod-release/sc-release-odr-38 x.y.z
 ```
 
 2. A pull request is created and all commit authors will be assigned as reviewers
