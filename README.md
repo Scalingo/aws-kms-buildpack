@@ -28,3 +28,15 @@ FILES=1.txt,2.txt,3.txt
 ```
 
 The buildpack will download the object `a` from S3 and store it in the `$CERTS_INSTALL_PATH/1.txt` file, store the `b` object to `$CERTS_INSTALL_PATH/2.txt` and store the `c` object to `$CERTS_INSTALL_PATH/3.txt`.
+
+### Release
+
+1. Place yourself on the commit you want to release
+
+```bash
+# x.y.z is the version number for this release
+$SCALINGO_HOME/tools-and-hacks/prod-release/sc-release-odr-38 x.y.z
+```
+
+2. A pull request is created and all commit authors will be assigned as reviewers
+3. Once the PR is merged, a "stable" tag is generated and a release out of it.
