@@ -5,7 +5,7 @@ This buildpack is used to download certificates from a S3 bucket.
 To use it, add the following line at the top of your `.buildpacks` file:
 
 ```
-https://github.com/Scalingo/aws-kms-buildpack.git#v4
+https://github.com/Scalingo/aws-kms-buildpack.git#v5.0.0
 ```
 
 This buildpack uses the following environment variables:
